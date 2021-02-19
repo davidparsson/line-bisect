@@ -157,6 +157,10 @@ def _get_lines(commands_file: Path) -> List[Line]:
     return lines
 
 
+def _is_command(command: str) -> bool:
+    return bool(command) and not command.startswith('#')
+
+
 def _get_bisector(
     good_argument: Optional[str],
     bad_argument: Optional[str],
@@ -181,10 +185,6 @@ def _get_line_index(line_argument: Optional[str], lines: List[Line]) -> int:
         if line.number >= line_number_argument:
             return line_index
     return len(lines) - 1
-
-
-def _is_command(command: str) -> bool:
-    return bool(command) and not command.startswith('#')
 
 
 if __name__ == '__main__':
