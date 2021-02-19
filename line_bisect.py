@@ -129,12 +129,7 @@ class Bisector:
 def main() -> int:
     arguments = docopt(__doc__)
 
-    lines = []
-    with Path(arguments['<commands-file>']).open() as open_file:
-        for line_number, command in enumerate(open_file, start=1):
-            command = command.strip()
-            if _is_command(command):
-                lines.append(Line(number=line_number, command=command))
+    lines = _get_lines(Path(arguments['<commands-file>']))
 
     bisector = _get_bisector(
         arguments['--good'], arguments['--bad'], lines, arguments['<test>']
@@ -150,6 +145,16 @@ def main() -> int:
 def run(command: str, description: str) -> bool:
     print(crayons.cyan(f'Running {description}: {command}'))
     return os.system(command) == 0
+
+
+def _get_lines(commands_file: Path) -> List[Line]:
+    lines = []
+    with commands_file.open() as open_file:
+        for line_number, command in enumerate(open_file, start=1):
+            command = command.strip()
+            if _is_command(command):
+                lines.append(Line(number=line_number, command=command))
+    return lines
 
 
 def _get_bisector(
